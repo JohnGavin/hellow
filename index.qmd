@@ -1,0 +1,76 @@
+---
+params:
+    source_url: "https://blog.stephenturner.us/p/r-package-development-in-positron"
+title: "r-package-development-in-positron"
+---
+
+This is a Quarto website.
+
+To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+
+# usethis
++ dependency management,
++ DESCRIPTION file manipulation,
++ .R and test file creation,
++ data-raw creation,
++ vignettes,
++ pkgdown,
++ GitHub actions ...
+
+```{r, eval = FALSE}
+usethis::create_packagesw("hellow")
+usethis::use_mit_license("john gavin")
+usethis::use_package("praise")
+#
+# Cmd-Shift-D: Document with Roxygen
+#
+devtools::document()
+# cmd-shift-E
+devtools::check()
+# RStudio keyboard shortcut cmd-shift-B
+devtools::build()
+pak::local_install()
+
+usethis::use_test("hello")
+# cmd-shift-T
+devtools::test()
+
+```
+
++ RStudio uses `R CMD INSTALL`
++ Positron uses `pak::local_install()`
+
+## covr
++ https://covr.r-lib.org/
+
+```{r}
+library(covr)
+report() # requries DT
+# or
+if (interactive()) {
+    # covr::report(covr::package_coverage())
+    usethis::use_github_action("test-coverage")
+}
+```
+
+## pracpac
++ R Packaging with Docker
+
+```{r}
+# pak::pak('pracpac')
+# add renv.lock file and a Dockerfile
+pracpac::use_docker() # analyzes package DESCRIPTION
+```
++ build renv lock file
+    + captures versions of dependent packages installed
+    + writes Dockerfile builds R package
++ install all dependencies from renv lock file
+    + guarantees dependent pkgs versions install in Docker image
++ templates out pre- and post-processing R scripts
++ shell script that will drive the analysis
+
+## workflow
++ https://www.tidyverse.org/blog/2017/12/workflow-vs-script/
+```{r}
+library(here)
+```

@@ -1,0 +1,10 @@
+^hellow\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+_quarto.yml
+about.qmd
+hellow.code-workspace
+index.qmd
+styles.css
+^\.github$
+^docker$
