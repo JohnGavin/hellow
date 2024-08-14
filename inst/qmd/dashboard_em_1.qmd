@@ -5,6 +5,7 @@ title: "Quarto dashboard"
 format: dashboard
 ---
 
+
 ```{r}
 plot(mtcars)
 ```

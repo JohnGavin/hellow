@@ -1,0 +1,6 @@
+symlink*
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+result
