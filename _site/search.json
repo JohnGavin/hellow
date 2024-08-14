@@ -1,0 +1,9 @@
+[
+  {
+    "objectID": "inst/qmd/symlink pins_download_local_board.html",
+    "href": "inst/qmd/symlink pins_download_local_board.html",
+    "title": "Untitled",
+    "section": "",
+    "text": "https://pins.rstudio.com/articles/pins-update.html\n\n\npak::pak(\"rstudio/pins-r\")\n\n\nlibrary(pins)\n(bb &lt;- board_url(c(crypto = \"https://raw.githubusercontent.com/Robot-Wealth/r-quant-recipes/master/quantifying-combining-alphas/binance_perp_daily.csv\")))\nbb %&gt;%\n  pin_download(\"crypto\") %&gt;%\n  read.csv(check.names = FALSE) %&gt;%\n  tibble::as_tibble()\n\n\nlibrary(pins)\nc(\"penguins\" = \"https://colorado.rstudio.com/rsc/example_pin/\") %&gt;%\n  board_url() %&gt;%\n  pin_read(\"penguins\")\n\n# Identify the board\nboard &lt;-\n  board_url(c(\"penguins\" = \"https://colorado.rstudio.com/rsc/example_pin/\"))\n# Read the shared data\nboard %&gt;%\n  pin_read(\"penguins\")\n\n\nlibrary(pins)\nboard2 &lt;- board_temp(versioned = TRUE)\nboard2 %&gt;% pin_write(1:5, name = \"x\", type = \"rds\")\nboard2 %&gt;% pin_write(2:6, name = \"x\", type = \"rds\")\nboard2 %&gt;% pin_write(3:7, name = \"x\", type = \"rds\")\n# see all versions\nboard2 %&gt;% pin_versions(\"x\")\n\n\npin_meta()\npin_search()\npin_meta()\npin_delete()\npin_browse()"
+  }
+]
