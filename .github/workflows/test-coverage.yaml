@@ -1,3 +1,8 @@
+# https://github.com/r-lib/usethis/issues/1435
+# https://app.codecov.io/gh/JohnGavin/hellow
+# https://github.com/codecov/example-python/blob/main/.github/workflows/ci.yml
+# https://github.com/r-lib/covr/issues/430
+
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
@@ -40,7 +45,6 @@ jobs:
         shell: Rscript {0}
 
       - name: Upload coverage reports to Codecov
-        # uses: codecov/codecov-action@v4.0.1
         uses: codecov/codecov-action@v4
         with:
           verbose: true
@@ -61,4 +65,3 @@ jobs:
           name: coverage-test-failures
           path: ${{ runner.temp }}/package
           token: ${{ secrets.CODECOV_TOKEN }}
-

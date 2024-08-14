@@ -1,0 +1,10 @@
+---
+params:
+    source_url: "https://connect.posit.cloud/ivelasq/content/0190c2c9-dd44-d440-0f97-f3b3bf073d0f"
+title: "Quarto dashboard"
+format: dashboard
+---
+
+```{r}
+plot(mtcars)
+```
