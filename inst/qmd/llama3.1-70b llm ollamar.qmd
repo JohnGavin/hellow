@@ -1,0 +1,49 @@
+---
+params:
+    source_url" "https://gettinggeneticsdone.blogspot.com/2024/08/use-r-to-prompt-local-llm-with-ollamar.html"
+title: "llama3.1:70b llm ollamar"
+format: dashboard
+---
+
+
+
+```{r}
+library(msigdbr)
+hm <- msigdbr(species="human", category="H")
+gs <- unique(hm[hm$gs_name=="HALLMARK_G2M_CHECKPOINT",]$gene_symbol)
+
+library(ollamar)
+test_connection()
+
+```
+
+```{r}
+# Collapse the symbol vector to a string ("GENE1, GENE2, GENE3")
+(gs_string <- gs |>
+  sample(3) |>
+  paste(collapse = ", "))
+
+# Create a prompt
+prompt <- paste(
+  "I'm going to give you some gene symbols.
+    Anything interesting about this gene set? ",
+  gs_string
+)
+
+# Prompt the model
+library(tictoc)
+# llama3 FAILS
+mdl <- c("llama3.1:70b", "mistral:latest")[2]
+tic('generate("llama3.1:8b"')
+res <- generate(
+  model = mdl,
+  prompt = prompt,
+  output = c("text", "resp", "jsonlist", "raw", "df", "req")[1]
+)
+toc()
+
+# Print the results
+res
+# cat(res$response)
+
+```

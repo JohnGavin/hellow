@@ -1,0 +1,137 @@
+---
+params:
+    source_url: "https://www.kenkoonwong.com/blog/gemini/#minimal-reproducible-code"
+title: "Untitled"
+format: html
+---
+
+
+```{r}
+library(tidyverse)
+library(reticulate)
+
+# install Python, using pyenv
+install_python(
+  # latest patch via python.org
+  # 3.12.5 Aug 24
+  version = "3.12:latest",
+  list = FALSE,
+  force = FALSE,
+  optimized = TRUE
+)
+
+# 1: virtual env - a best practice.
+# conda create -n gemini python=3.12
+# ls ~/.virtualenvs/
+# python3.12 -m venv ~/.virtualenvs/gemini
+# source ~/.virtualenvs/gemini/bin/activate
+# pip3 install google-generativeai langchain langchain-community pypdf python-dotenv
+# manually installed python; manually get path
+py_vers <- "/opt/homebrew/Caskroom/miniconda/base/envs/gemini/bin/python"
+# 3.12.5 v 3.12.4?!
+use_python(py_vers, required = TRUE)
+py_config()
+
+
+virtualenv_create(
+  envname = "gemini",
+  version = "3.12:latest"
+)
+use_condaenv("gemini", required = TRUE)
+# /Users/johngavin/.virtualenvs/gemini/bin/python3.12
+# use_miniconda(
+#     condaenv = "gemini",
+#     required = TRUE)
+# use_virtualenv("gemini", required = TRUE))
+
+
+py_install(c("google-generativeai", "langchain", "langchain-community", "pypdf", "python-dotenv"), pip = T, virtualenv = "gemini")
+
+# Step 2: Use the virtual environment
+# use_virtualenv("gemini")
+
+# Step 3: Import installed modules
+dotenv <- import("dotenv"
+langchain_community <- import("langchain_community")
+PyPDFLoader <- langchain_community$document_loaders$PyPDFLoader
+langchain <- import("langchain")
+PromptTemplate <- langchain$prompts$PromptTemplate
+genai <- import("google.generativeai")
+# genai <- import("google-generativeai")
+# genai <- import("google_generativeai")
+
+# Step 4: Load your API keys onto a .env file - see https://pypi.org/project/python-dotenv/
+dotenv$load_dotenv(dotenv_path = ".env", verbose = TRUE)
+```
+```{r}
+# Step 5: Load PDF of interest
+fp <- file.path(
+  "~/Downloads",
+  "Profitable Day Trading Strategy For The U.S. Equity.pdf"
+)
+loader <- PyPDFLoader(fp)
+documents <- loader$load()
+
+# Step 6: Setup Gemini
+genai$configure() # if you're skipping dotenv, insert your API key here```{r, eval = FALSE} # ----
+llm <- genai$GenerativeModel(
+  "gemini-1.5-flash",
+  generation_config = genai$GenerationConfig(
+    max_output_tokens = 2000L,
+    temperature = 0
+  )
+)
+
+# Step 7 (optional): Test
+# FAIL Gemini API free tier is not available in your country.
+llm$generate_content(contents = "hello") # you should see a return of text and tokens etc.
+
+# Step 8: Prompt
+prompt_text <- "
+You are a question and answer assistant. Given the context below, answer the question.
+
+Context: {text}
+
+Question: {question}
+"
+
+prompt <- PromptTemplate(template = prompt_text, input_variables = list("text", "question"))
+
+questions <- c(
+  "What is the preferred treatment of CRE?",
+  "What is the preferred treatment of ESBL-E?",
+  "Can we use fosfomycin in ESBL Klebsiella?",
+  "Can we use fosfomycin in ESBL Ecoli?",
+  "What is the preferred treatment of stenotrophomonas?",
+  "What is the preferred treatment of DTR Pseudomonas?",
+  "Which organisms require two active agent when susceptibility is known?",
+  "Can we use gentamicin in pseudomonas infection?",
+  "Can we use tobramycin to treat pseudomonas infection?",
+  "Why is there carbapenemase non-producing organism?",
+  "Can we use oral antibiotics for any of these MDRO?",
+  "What is the preferred treatment of MRSA?",
+  "What is the preferred treatment of CRAB?",
+  "Can fosofmycin be used for pyelonephritis?",
+  "Is IV antibiotics better than oral antibiotics?"
+)
+
+content <- prompt$format(
+  text = documents,
+  question = questions
+)
+
+# Step 9: Generate Content / aka Langchain lingo == invoke
+response <- llm$generate_content(contents = content)
+
+# Step 10: Let's simulate a streaming response 🤪
+print_keystrokes <- function(text) {
+  for (char in strsplit(text, "")[[1]]) {
+    cat(char) # Print the character
+    Sys.sleep(0.005) # Optional delay for visual effect
+  }
+  cat("\n") # Add a newline at the end
+}
+
+print_keystrokes(response$text)
+
+```

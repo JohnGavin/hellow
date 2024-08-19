@@ -37,7 +37,7 @@ jobs:
 
       - name: Test coverage
         run: |
-          covr::codecov(token = "${{ secrets.CODECOV_TOKEN }}")
+          # covr::codecov(token = "${{ secrets.CODECOV_TOKEN }}")
           cov <- covr::package_coverage(
             quiet = FALSE,
             clean = FALSE,
