@@ -1,0 +1,57 @@
+---
+execute:
+  eval: false
+params:
+    source_url: "https://connect.posit.cloud/ivelasq/content/0190c2c9-dd44-d440-0f97-f3b3bf073d0f"
+    source_alt: "https://connect.posit.cloud/ivelasq"
+title: "My first Quarto dashboard"
+format:
+  dashboard:
+    theme: style.scss
+# s erver: shiny
+---
+
+# Main
+```{r}
+# #| context: setup
+library(ggplot2)
+```
+
+## {.sidebar}
+
+```{r}
+shiny::selectInput(
+    "variableChoice",
+    "Choose a variable:",
+    choices = names(mtcars)
+  )
+```
+
+## Column
+
+### Row
+
+Here is my dashboard:
+
+### Row
+
+```{r}
+#| title: "Plot 2"
+shiny::plotOutput("variablePlot")
+```
+
+```{r, eval = FALSE}
+# #| context: s erver
+
+output$variablePlot <- renderPlot({
+  yVar <- mtcars[[input$variableChoice]]
+  plot(mtcars$index, yVar)
+})
+```
+
+
+# Links
++ (Quarto dashboard creation and automation
+)[https://ivelasq.rbind.io/blog/automated-quarto-dashboard/]
++ (Using flexdashboard to create a GitHub Actions-powered YouTube feed)[https://ivelasq.rbind.io/blog/automated-youtube-dashboard/]
++ https://ivelasq.rbind.io/

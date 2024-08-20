@@ -3,10 +3,12 @@ params:
     source_url: "https://www.kenkoonwong.com/blog/gemini/#minimal-reproducible-code"
 title: "Untitled"
 format: html
+execute:
+  eval: false
 ---
 
 
-```{r}
+```{r, eval = FALSE}
 library(tidyverse)
 library(reticulate)
 
@@ -63,7 +65,7 @@ genai <- import("google.generativeai")
 # Step 4: Load your API keys onto a .env file - see https://pypi.org/project/python-dotenv/
 dotenv$load_dotenv(dotenv_path = ".env", verbose = TRUE)
 ```
-```{r}
+```{r Load PDF of interest, eval = FALSE}
 # Step 5: Load PDF of interest
 fp <- file.path(
   "~/Downloads",
@@ -73,7 +75,9 @@ loader <- PyPDFLoader(fp)
 documents <- loader$load()
 
 # Step 6: Setup Gemini
-genai$configure() # if you're skipping dotenv, insert your API key here```{r, eval = FALSE} # ----
+genai$configure() # if you're skipping dotenv, insert your API key here
+
+```{r GenerativeModel, eval = FALSE}
 llm <- genai$GenerativeModel(
   "gemini-1.5-flash",
   generation_config = genai$GenerationConfig(
@@ -81,11 +85,13 @@ llm <- genai$GenerativeModel(
     temperature = 0
   )
 )
-
+```
+```{r Gemini not in UK, eval = FALSE}
 # Step 7 (optional): Test
 # FAIL Gemini API free tier is not available in your country.
-llm$generate_content(contents = "hello") # you should see a return of text and tokens etc.
-
+llm$generate_content(contents = "hello")
+```
+```{r}
 # Step 8: Prompt
 prompt_text <- "
 You are a question and answer assistant. Given the context below, answer the question.
@@ -119,10 +125,12 @@ content <- prompt$format(
   text = documents,
   question = questions
 )
-
+```
+```{r ignore generate_content, eval = FALSE}
 # Step 9: Generate Content / aka Langchain lingo == invoke
 response <- llm$generate_content(contents = content)
-
+```
+```{r, eval = FALSE}
 # Step 10: Let's simulate a streaming response 🤪
 print_keystrokes <- function(text) {
   for (char in strsplit(text, "")[[1]]) {

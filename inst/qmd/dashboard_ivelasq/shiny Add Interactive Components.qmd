@@ -1,0 +1,55 @@
+---
+execute:
+  eval: false
+params:
+    source_url: "https://connect.posit.cloud/ivelasq/content/0190c2c9-dd44-d440-0f97-f3b3bf073d0f"
+# ERROR: Unknown option "--output-dir". Did you mean option "--no-render"?
+# server: shiny
+title: "My first Quarto dashboard"
+format:
+  dashboard:
+    orientation: rows
+---
++ https://bit.ly/quarto-dashboards
+
+
+
++ quarto serve "/Users/johngavin/docs_gh/hellow/inst/qmd/dashboard_ivelasq/shiny Add Interactive Components.qmd"
++ ERROR: inst/qmd/dashboard_ivelasq/shiny Add Interactive Components.qmd uses server: shiny so cannot be included in a website project (shiny documents require a backend server and so can't be published as static web content).
+
+
+```{r}
+#| context: setup
+library(ggplot2)
+```
+
+## {.sidebar}
+
+```{r}
+selectInput(
+    "variableChoice",
+    "Choose a variable:",
+    choices = names(mtcars)
+  )
+```
+
+## Column
+
+### Row
+
+Here is my dashboard:
+
+### Row
+
+```{r}
+#| title: "Plot 2"
+plotOutput("variablePlot")
+```
+
+```{r}
+#| context: server
+output$variablePlot <- renderPlot({
+  yVar <- mtcars[[input$variableChoice]]
+  plot(mtcars$index, yVar)
+})
+```
