@@ -8,3 +8,5 @@ index.qmd
 styles.css
 ^\.github$
 ^docker$
+^library$
+.+\.nix$
